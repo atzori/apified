@@ -1,5 +1,18 @@
+/*
+TO DO:
+	- logging with widsom
+	- REDIRECT stdout as in http://www.letscodejavascript.com/v3/blog/2014/04/the_remarkable_parts
+	- options {
+		onerror = function(err) {return ""} | "this is the real error" | {result:correct} ???
+		argnames = override function argument names
+		callback = true (=ultimo parametro)| number (indice 0= primo parametro)
+		jsonp to set jsonp = default false (since cors is true)
+	}
+*/
+
 var Promise = require('bluebird'),
-	colors = require('colors')
+	colors = require('colors'),
+	extend = require('extend')
 
 /** given a function f, returns the list of its arguments (array of strings) */
 function functionInfo(f) {
@@ -17,13 +30,11 @@ function functionInfo(f) {
 }
 
 function callfunction(f,params) {
-	//f = Promise.promisify(f)
 	var error = 'no info available'
 	try {
 		return Promise.try(function() {return f.apply(null,params)})
-		/*ret = {result: f.apply(null,params)}
-		*/
 	} catch(err) {
+		//console.error(err)
 		error = err
 	}
 	return Promise.reject(error) // error
@@ -38,21 +49,44 @@ function computeparams(args,queryparams) {
 		})
 }
 
-function apified(f) {
-	var info = functionInfo(f)
+function apified(f, options) {
+	if (typeof options === 'string')
+		options = {name: options}
+	else if (typeof options !== 'object' || options === null)
+		options = {}
 
+	var info = functionInfo(f)
+	var defaultOptions = {
+		name: info.name,
+		port: process.env.PORT || 3000 ,
+		cors: true
+	}
+
+	options = extend({}, defaultOptions,  options)
+
+	info.name = options.name
+	
+	if (info.args.length>0 
+			&& info.args[info.args.length-1].toLowerCase() === "callback") {
+		// must be promisified
+		f = Promise.promisify(f)
+		info.args.pop()
+	}
+	
 	var express = require('express'),
 		app = express()
 	
-	app.use(function(req, res, next) {
-		res.header("Access-Control-Allow-Origin", "*");
-		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-		next();
-	});
+	if (options.cors) {
+		app.use(function(req, res, next) {
+				res.header("Access-Control-Allow-Origin", "*");
+				res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+			next();
+		});
+	}
 	app.get('/'+info.name, function (req, res) {
 		var params = computeparams(info.args,req.query)
 		
-		callfunction(f,params)
+		callfunction(f, params)
 		.then(function(data) {
 			if(data === null || typeof data === 'undefined') { data = "" }
 			data = (typeof data === 'object')? data : {result:data}	
@@ -63,7 +97,7 @@ function apified(f) {
 		})
 	});
 	
-	var server = app.listen(process.env.PORT || 3000, function () {
+	var server = app.listen(options.port, function () {
 		var host = server.address().address;
 		var port = server.address().port;
 		
@@ -71,7 +105,9 @@ function apified(f) {
 			"%s has been " + colors.red('apified') +" at "+
 			colors.magenta("http://%s:%s/%s") +"\nAccepting"+
 			" the following GET parameters: %s\n",
-			colors.cyan(info.name), host, port, info.name,info.args.map(function(e) {return colors.cyan(e)}).join(', '));
+				typeof info.name !== 'undefined'?
+				"'"+colors.cyan(info.name)+"'":'an anonymous function',
+				host, port, info.name,info.args.map(function(e) {return colors.cyan(e)}).join(', '));
 	});
 	return {
 		host: server.address().address,
