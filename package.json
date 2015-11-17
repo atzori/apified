@@ -4,7 +4,7 @@
   "description": "Serves Web API out of JavaScript functions.",
   "main": "src/apified.js",
   "scripts": {
-    "start": "node src/apified.js",
+    "start": "npm run devstart",
     "test": "curl -i -H 'Accept: application/json' -H 'Content-Type: application/json' -X GET 'http://127.0.0.1:3000/mycoolfunction?number=01.01&anotherNumber=30'",
     "devstart": "node src/test.js"
   },
