@@ -1,8 +1,8 @@
 {
   "name": "apified",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Serves Web API out of JavaScript functions.",
-  "main": "src/index.js",
+  "main": "src/apified.js",
   "scripts": {
     "start": "node src/apified.js",
     "test": "curl -i -H 'Accept: application/json' -H 'Content-Type: application/json' -X GET 'http://127.0.0.1:3000/mycoolfunction?number=01.01&anotherNumber=30'",
