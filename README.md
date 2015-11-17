@@ -5,7 +5,7 @@ Serves Web API out of JavaScript functions.
 ## Usage
 
 ```
-var apified = require('./apify')
+var apified = require('apified')
 
 function mycoolfunction(number, anotherNumber) {
 	return number + anotherNumber
