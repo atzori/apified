@@ -12,6 +12,7 @@ TO DO:
 		stdout = ['auto','true','false'] // default auto (auto means it is used only if function does not return)
 		stderr = ['auto','true','false'] // default false 
 		raw = ['true', 'false'] // default false (always serve json); with true returns raw strings when they are returned 
+		result = string // default = "result" // allow to change the "result" attribute of the json
 		
 	}
 */
