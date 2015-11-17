@@ -12,5 +12,4 @@ function mycoolfunctionWithCallback(number, anotherNumber,cb) {
 }
 
 var apiInfo = apified(mycoolfunction)
-console.log(apiInfo)
-
+//console.log(apiInfo)
