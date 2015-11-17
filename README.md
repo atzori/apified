@@ -12,12 +12,9 @@ function mycoolfunction(number, anotherNumber) {
 }
 
 
-var APIserver = apified(mycoolfunction)
+apified(mycoolfunction) // let's play!
 
 ```
 
-Now your Web API is running. 
-To test it, go at [localhost:3000/mycoolfunction?number=5&number=9](http://localhost:3000/mycoolfunction?number=5&number=9) 
+Now your Web API server is up! Go at [localhost:3000/mycoolfunction?number=5&number=9](http://localhost:3000/mycoolfunction?number=5&number=9) 
 and get the valid JSON `{"result":"14"}`.
-
-## Options
