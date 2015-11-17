@@ -36,7 +36,7 @@ and get the valid JSON `{"result":"14"}`.
   - in case of errors (such as exceptions) an `{"error":ERROR_DESCRIPTION_STRING}` is returned with HTTP 400
   - it handles argument numbers transparently (converting strings to numbers when appropriate).
   - supports [Cross-Origin Resource Sharing (CORS)](http://www.w3.org/TR/cors/) so the service can also be queried easily from the browser.
-
+  - it even works with sync functions that do not return any value, returing their stdout (`console.log`) instead
 
 ## Options
 

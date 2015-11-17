@@ -2,6 +2,7 @@
 TO DO:
 	- logging with widsom
 	- REDIRECT stdout as in http://www.letscodejavascript.com/v3/blog/2014/04/the_remarkable_parts
+	  for async functions (for sync is done)
 	- options {
 		onerror = function(err) {return ""} | "this is the real error" | {result:correct} ???
 		argnames = override function argument names
@@ -32,7 +33,21 @@ function functionInfo(f) {
 function callfunction(f,params) {
 	var error = 'no info available'
 	try {
-		return Promise.try(function() {return f.apply(null,params)})
+		return Promise.try(function() {
+			var output = [];
+			var originalStdout = process.stdout.write;
+			process.stdout.write = function(str) {
+				output.push(str);
+			};
+			var result = f.apply(null,params) 
+			process.stdout.write = originalStdout;
+			
+			if (output.length > 0 && 
+				(typeof result === 'undefined' || result === null))
+				return output.join('\n')
+			else return result
+				
+		})
 	} catch(err) {
 		//console.error(err)
 		error = err
