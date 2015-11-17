@@ -1,0 +1,21 @@
+{
+  "name": "apified",
+  "version": "0.1.0",
+  "description": "Serves Web API out of JavaScript functions.",
+  "main": "src/apified.js",
+  "scripts": {
+    "start": "node src/apified.js",
+    "test": "curl -i -H 'Accept: application/json' -H 'Content-Type: application/json' -X GET 'http://127.0.0.1:3000/mycoolfunction?number=01.01&anotherNumber=30'",
+    "devstart": "node src/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:atzori/apified.git"
+  },
+  "author": "Maurizio Atzori",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "express": "~4.13.3",
+    "bluebird": "~3.0.5"
+  }
+}
