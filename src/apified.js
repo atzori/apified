@@ -33,7 +33,6 @@ function isNumber(obj) { return !isNaN(parseFloat(obj)) && !isNaN(Number(obj)) }
 function computeparams(args,queryparams) { 
 	return args.map(function(param) {
 			var value = queryparams[param] 	
-			console.log(value, isNumber(value), isNumber(value)?Number(value):value)
 			return isNumber(value)?Number(value):value 
 		})
 }
@@ -46,19 +45,12 @@ function apified(f) {
 	
 	app.get('/'+info.name, function (req, res) {
 		var params = computeparams(info.args,req.query)
-		console.log('calling function ')
-		console.log(params)
-		console.log(f)
 		
 		callfunction(f,params)
-		.then(function(data) {
-			console.log('then')
-			console.log(data)
-			
+		.then(function(data) {			
 			res.json({result:data});
 		})
 		.catch(function(err) {
-			console.log('err')
 			res.status(400).json({error:err})
 		})
 	});
@@ -67,8 +59,8 @@ function apified(f) {
 		var host = server.address().address;
 		var port = server.address().port;
 		
-		console.log('APIfier listening the "'+info.name+'" WebAPI at http://%s:%s/'+
-			info.name, host, port);
+		console.log("'%s' has been apified at http://%s:%s/%s (accepting the following GET parameters: %s)",
+			info.name, host, port, info.name,info.args.join(', '));
 	});
 	return {
 		host: server.address().address,
