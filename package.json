@@ -1,10 +1,10 @@
 {
   "name": "apified",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Serves Web API out of JavaScript functions.",
   "main": "src/apified.js",
   "scripts": {
-    "start": "node src/apified.js",
+    "start": "npm run devstart",
     "test": "curl -i -H 'Accept: application/json' -H 'Content-Type: application/json' -X GET 'http://127.0.0.1:3000/mycoolfunction?number=01.01&anotherNumber=30'",
     "devstart": "node src/test.js"
   },
@@ -16,6 +16,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "express": "~4.13.3",
-    "bluebird": "~3.0.5"
+    "bluebird": "~3.0.5",
+    "colors": "~1.1.2",
+    "extend": "~3.0.0"
   }
 }
