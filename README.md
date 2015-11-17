@@ -20,7 +20,7 @@ Now your Web API server is up!
 
 Checkout the service at [localhost:3000/mycoolfunction?number=5&number=9](http://localhost:3000/mycoolfunction?number=5&number=9) 
 and get the valid JSON `{"result":"14"}`.
-The server supports [Cross-Origin Resource Sharing (CORS)](http://www.w3.org/TR/cors/) so the service can also be easily queried from the browser.
+The server supports [Cross-Origin Resource Sharing (CORS)](http://www.w3.org/TR/cors/) so the service can also be queried easily from the browser.
 
 ## Install
 

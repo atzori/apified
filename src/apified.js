@@ -1,4 +1,5 @@
-var Promise = require('bluebird')
+var Promise = require('bluebird'),
+	colors = require('colors')
 
 /** given a function f, returns the list of its arguments (array of strings) */
 function functionInfo(f) {
@@ -52,8 +53,10 @@ function apified(f) {
 		var params = computeparams(info.args,req.query)
 		
 		callfunction(f,params)
-		.then(function(data) {			
-			res.json({result:data});
+		.then(function(data) {
+			if(data === null || typeof data === 'undefined') { data = "" }
+			data = (typeof data === 'object')? data : {result:data}	
+			res.json(data);
 		})
 		.catch(function(err) {
 			res.status(400).json({error:err})
@@ -64,8 +67,11 @@ function apified(f) {
 		var host = server.address().address;
 		var port = server.address().port;
 		
-		console.log("'%s' has been apified at http://%s:%s/%s (accepting the following GET parameters: %s)",
-			info.name, host, port, info.name,info.args.join(', '));
+		console.log(
+			"%s has been " + colors.red('apified') +" at "+
+			colors.magenta("http://%s:%s/%s") +"\nAccepting"+
+			" the following GET parameters: %s\n",
+			colors.cyan(info.name), host, port, info.name,info.args.map(function(e) {return colors.cyan(e)}).join(', '));
 	});
 	return {
 		host: server.address().address,
