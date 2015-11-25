@@ -1,7 +1,7 @@
 {
   "name": "apified",
-  "version": "0.2.0",
-  "description": "Serves Web API out of JavaScript functions.",
+  "version": "0.2.1",
+  "description": "Serves Web APIs out of JavaScript functions",
   "main": "src/apified.js",
   "scripts": {
     "start": "npm run devstart",
