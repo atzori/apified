@@ -1,6 +1,6 @@
 {
   "name": "apified",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Serves Web APIs out of JavaScript functions",
   "main": "src/apified.js",
   "scripts": {
