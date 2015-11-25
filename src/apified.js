@@ -1,25 +1,8 @@
-/*
-TO DO:
-	- tests! https://strongloop.com/strongblog/how-to-test-an-api-with-node-js/
-	- logging with widsom
-	- REDIRECT stdout as in http://www.letscodejavascript.com/v3/blog/2014/04/the_remarkable_parts
-	  for async functions (for sync is done)
-	- options {
-		onerror = function(err) {return ""} | "this is the real error" | {result:correct} ???
-		argnames = override function argument names
-		callback = true (=ultimo parametro)| number (indice 0= primo parametro)
-		jsonp to set jsonp = default false (since cors is true)
-		stdout = ['auto','true','false'] // default auto (auto means it is used only if function does not return)
-		stderr = ['auto','true','false'] // default false 
-		raw = ['true', 'false'] // default false (always serve json); with true returns raw strings when they are returned 
-		result = string // default = "result" // allow to change the "result" attribute of the json
-		
-	}
-*/
 
 var Promise = require('bluebird'),
 	colors = require('colors'),
 	extend = require('extend')
+	
 
 /** given a function f, returns the list of its arguments (array of strings) */
 function functionInfo(f) {
@@ -81,10 +64,17 @@ function apified(f, options) {
 	var defaultOptions = {
 		name: info.name,
 		port: process.env.PORT || 3000 ,
-		cors: true
+		cors: true,
+		workers: true
 	}
 
 	options = extend({}, defaultOptions,  options)
+
+	if (options.workers === true) {
+		options.workers = 2* require('os').cpus().length
+	} else if(options.workers === false) {
+		options.workers = 1		
+	} 
 
 	info.name = options.name
 	
@@ -98,6 +88,10 @@ function apified(f, options) {
 	var express = require('express'),
 		app = express()
 	
+	app.use(function(req, res, next) {
+		res.header("X-Powered-By", "Apified")
+		next()
+	})
 	if (options.cors) {
 		app.use(function(req, res, next) {
 				res.header("Access-Control-Allow-Origin", "*");
@@ -105,7 +99,7 @@ function apified(f, options) {
 			next();
 		});
 	}
-	app.get('/'+info.name, function (req, res) {
+	app.all('/'+info.name, function (req, res) {
 		var params = computeparams(info.args,req.query)
 		
 		callfunction(f, params)
@@ -119,25 +113,66 @@ function apified(f, options) {
 		})
 	});
 	
-	var server = app.listen(options.port, function () {
-		var host = server.address().address;
-		var port = server.address().port;
+	
+	
+	//////// CLUSTER
+	function tobeclustered(worker) {
+		var server = app.listen(options.port, function (a,b,c,d) {
+			var host = server.address().address;
+			var port = server.address().port;
+			//console.log(server)
+			console.log(
+				"%s has been " + colors.red('apified') +" at "+
+				colors.magenta("http://%s:%s/%s") +"\nWorker %saccepting"+
+				" the following GET parameters: %s\n",
+					typeof info.name !== 'undefined'?
+					"'"+colors.cyan(info.name)+"'":'an anonymous function',
+					host, port, info.name,
+					options.workers>1?(worker.id + " (pid "+  worker.process.pid+") "):'',
+					info.args.map(function(e) {return colors.cyan(e)}).join(', ')
+					
+				);
+		});
+
+		return {
+			server: server,
+			api: info.name,
+			params: info.args 
+		}
 		
-		console.log(
-			"%s has been " + colors.red('apified') +" at "+
-			colors.magenta("http://%s:%s/%s") +"\nAccepting"+
-			" the following GET parameters: %s\n",
-				typeof info.name !== 'undefined'?
-				"'"+colors.cyan(info.name)+"'":'an anonymous function',
-				host, port, info.name,info.args.map(function(e) {return colors.cyan(e)}).join(', '));
-	});
-	return {
-		host: server.address().address,
-		port: server.address().port,
-		api: info.name,
-		params: info.args 
-	}
-}
+		
+
+	} // tobeclustered
+	clusterrific(tobeclustered,options.workers)
+		
+			
+}		
+
 
 module.exports = apified
 
+function clusterrific(f, workers) {
+	var cluster = require('cluster')
+
+	if (workers > 1) {
+		// Listen for dying workers
+		cluster.on('exit', function (worker) {
+			// Replace the dead worker,
+			// we're not sentimental
+			console.log('Worker ' + worker.id + ' died :(');
+			cluster.fork();
+					
+		});
+	}
+	if (workers > 1 && cluster.isMaster) {
+		//console.log('STARTING CLUSTER MASTER ' + cluster.id);
+				
+		// Create a worker for each CPU
+		for (var i = 0; i < workers ; i += 1) {
+			cluster.fork();
+		}		
+	// Code to run if we're in a worker process
+	} else {
+		return f(cluster.worker)	
+	}	
+}
