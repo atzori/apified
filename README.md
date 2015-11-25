@@ -43,7 +43,7 @@ and get the valid JSON `{"result":"14"}`.
   - it handles argument numbers transparently (converting strings to numbers when appropriate).
   - supports [Cross-Origin Resource Sharing (CORS)](http://www.w3.org/TR/cors/) so the service can also be queried easily from the browser.
   - it even works with sync functions that do not return any value, returing their stdout (`console.log`) instead
-  - performant execution with multiple workers (can be disabled)
+  - parallel execution using multiple workers (can be disabled)
 
 ## Options
 
@@ -60,6 +60,7 @@ Alternatively it can be an object with the following optional parameters:
   - *cors*: set/unset CORS (default: true)
   - *workers*: the number of workers, either an integer &gt;=1 or a boolean; false means one worker, true set 
   the number of workers twice the number of processors (default: true) 
+  - *cache*: set/unset the cache (default: false); set a simple in-memory cache (note: there is a different cache for each worker)
   
 ## Development
 

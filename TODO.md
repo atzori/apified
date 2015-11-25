@@ -1,7 +1,7 @@
 # TODO
 
  - tests! https://strongloop.com/strongblog/how-to-test-an-api-with-node-js/
- - logging with widsom
+ - logging with widsom!!!
  - REDIRECT stdout as in http://www.letscodejavascript.com/v3/blog/2014/04/the_remarkable_parts
 	for async functions (for sync is done)
  - options 
@@ -14,4 +14,5 @@
 	- raw = ['true', 'false'] // default false (always serve json); with true returns raw strings when they are returned (mimetype is autodetermined) 
 	- mimetype = ['auto' , string] // default auto, otherwise it will always be the provided string
 	- result = string // default = "result" // allow to change the "result" attribute of the json
-	- parallel = true // false, true [1-n] // how many instances in parallel? false=1 auto/true= twice the number of processors  
+	- cache => cache should be in common among different workers => implement better cache (pluggable with different cache systems)
+  - perhaps make apified returning a (one) promise.
