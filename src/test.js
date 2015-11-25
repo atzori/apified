@@ -29,4 +29,4 @@ function mycoolfunction(number, anotherNumber, callback) {
 //var apiInfo = apified(f3,{name:'mycoolfunction',workers:2})
 //console.log('returning value', apiInfo)
 
-apified(f3,{name:'mycoolfunction',workers:true})
+apified(f3,{name:'mycoolfunction',workers:2,cache:true})

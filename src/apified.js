@@ -65,7 +65,8 @@ function apified(f, options) {
 		name: info.name,
 		port: process.env.PORT || 3000 ,
 		cors: true,
-		workers: true
+		workers: true, 
+		cache: false
 	}
 
 	options = extend({}, defaultOptions,  options)
@@ -99,21 +100,37 @@ function apified(f, options) {
 			next();
 		});
 	}
+
+	/*
+	if(options.cache) {
+		var cache = require('connect-cache')
+		app.use(cache({rules: [{regex: /.*REMOVETHIS/, ttl: 10  *24*60*60*1000}]}))	
+	}*/
+	simplecache = {}
 	app.all('/'+info.name, function (req, res) {
 		var params = computeparams(info.args,req.query)
-		
-		callfunction(f, params)
-		.then(function(data) {
-			if(data === null || typeof data === 'undefined') { data = "" }
-			data = (typeof data === 'object')? data : {result:data}	
-			res.json(data);
-		})
-		.catch(function(err) {
-			res.status(400).json({error:err})
-		})
+
+
+			if(options.cache && simplecache[params] ) {
+				res.status(simplecache[params].code).json(simplecache[params].data)
+				return
+			}
+			
+		//setTimeout(function(){		
+			callfunction(f, params)
+			.then(function(data) {
+				if(data === null || typeof data === 'undefined') { data = "" }
+				data = (typeof data === 'object')? data : {result:data}	
+				if (options.cache) simplecache[params] = {code:200, data: data}
+				res.json(data);
+			})
+			.catch(function(err) {
+				if (options.cache) simplecache[params] = {code:400, data: {error:err}}
+				res.status(400).json({error:err})
+			})
+		//}, 3000)
 	});
-	
-	
+
 	
 	//////// CLUSTER
 	function tobeclustered(worker) {
