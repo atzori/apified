@@ -1,5 +1,5 @@
 # APIfied
-Let any JavaScript function to be served as a Web API, **in just one line**!.
+Let any JavaScript function to be served as a Web API, **in just one line**!
 
 ## Install
 
