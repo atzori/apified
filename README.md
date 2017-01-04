@@ -7,6 +7,7 @@ Let any JavaScript function to be served as a Web API, **in just one line**!
 
 ## Getting Started
 
+Save the following into a nodejs file (e.g., `my_web_api.js`):
 ```javascript
 function mycoolfunction(number, anotherNumber) {
 	return number + anotherNumber
@@ -19,9 +20,9 @@ apified(mycoolfunction) // your API is online
 //require('apified')(mycoolfunction)
 ```
 
-Now your Web API server is up! 
+Then run `node my_web_apy.js` and bang... your Web API server is up and running! 
 
-Checkout the service at [localhost:3000/mycoolfunction?number=5&number=9](http://localhost:3000/mycoolfunction?number=5&anotheNumber=9) 
+Checkout the service at [http://localhost:3000/mycoolfunction?number=5&anotheNumber=9](http://localhost:3000/mycoolfunction?number=5&anotheNumber=9) 
 and get the valid JSON `{"result":"14"}`.
 
 
