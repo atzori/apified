@@ -10,10 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:atzori/apified.git"
+    "url": "https://github.com/atzori/apified.git"
   },
   "author": "Maurizio Atzori",
-  "license": "UNLICENSED",
+  "license": "GPLv3",
   "dependencies": {
     "bluebird": "~3.0.5",
     "colors": "~1.1.2",
