@@ -1,27 +1,22 @@
 # APIfied
-Serves Web API out of JavaScript functions.
+Let any JavaScript function to be served as a Web API, **in just one line**!.
 
 ## Install
 
-	npm install "git+ssh://git@bitbucket.org:atzori/apified.git" --save
-
-or
-
-	npm install git+https://atzori[:<password>]@bitbucket.org/atzori/apified.git[#<branch>]
-
+	npm install atzori/apified --save
 
 ## Getting Started
 
-```
-var apified = require('apified')
-
+```javascript
 function mycoolfunction(number, anotherNumber) {
 	return number + anotherNumber
 }
 
-
+var apified = require('apified')
 apified(mycoolfunction) // your API is online
 
+// or, if you prefer one-line, just use the following instead:
+//require('apified')(mycoolfunction)
 ```
 
 Now your Web API server is up! 
