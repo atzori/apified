@@ -3,7 +3,7 @@ Let any JavaScript function to be served as a Web API, **in just one line**!
 
 ## Install
 
-	npm install atzori/apified
+	npm install apified
 
 ## Getting Started
 
